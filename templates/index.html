@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTP Allocation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-container form {
+            width: 100%;
+            max-width: 400px;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .form-container input[type=file] {
+            display: block;
+            margin-bottom: 10px;
+            padding: 8px;
+            width: calc(100% - 16px);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        .form-container a {
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .form-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>BTP Allocation System</h1>
+    <div class="form-container">
+        <form id="upload-student-form" enctype="multipart/form-data">
+            <label for="student_file">Upload Student Preferences:</label>
+            <input type="file" id="student_file" name="student_file">
+            <button type="button" onclick="uploadStudent()">Upload Student Preferences</button>
+        </form>
+        
+        <br> <!-- Added space between forms -->
+        
+        <form id="upload-faculty-form" enctype="multipart/form-data">
+            <label for="faculty_file">Upload Faculty Preferences:</label>
+            <input type="file" id="faculty_file" name="faculty_file">
+            <button type="button" onclick="uploadFaculty()">Upload Faculty Preferences</button>
+        </form>
+        
+        <br> <!-- Added space between forms and allocate button -->
+        
+        <button type="button" onclick="allocate()">Allocate</button>
+        
+        <br><br>
+        
+        <a id="download-allocations" href="#" style="display:none;">Download Allocations</a>
+        <a id="download-unallocated" href="#" style="display:none;">Download Unallocated Students</a>
+    </div>
+
+    <script>
+        function uploadStudent() {
+            var formData = new FormData(document.getElementById('upload-student-form'));
+            fetch('/upload_student', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => alert(data));
+        }
+
+        function uploadFaculty() {
+            var formData = new FormData(document.getElementById('upload-faculty-form'));
+            fetch('/upload_faculty', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => alert(data));
+        }
+
+        function allocate() {
+            fetch('/allocate', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('download-allocations').href = '/download/' + data.allocations;
+                document.getElementById('download-allocations').style.display = 'block';
+                document.getElementById('download-unallocated').href = '/download/' + data.unallocated;
+                document.getElementById('download-unallocated').style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTP Allocation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-container form {
+            width: 100%;
+            max-width: 400px;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .form-container input[type=file] {
+            display: block;
+            margin-bottom: 10px;
+            padding: 8px;
+            width: calc(100% - 16px);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        .form-container a {
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .form-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>BTP Allocation System</h1>
+    <div class="form-container">
+        <form id="upload-student-form" enctype="multipart/form-data">
+            <label for="student_file">Upload Student Preferences:</label>
+            <input type="file" id="student_file" name="student_file">
+            <button type="button" onclick="uploadStudent()">Upload Student Preferences</button>
+        </form>
+        
+        <br> <!-- Added space between forms -->
+        
+        <form id="upload-faculty-form" enctype="multipart/form-data">
+            <label for="faculty_file">Upload Faculty Preferences:</label>
+            <input type="file" id="faculty_file" name="faculty_file">
+            <button type="button" onclick="uploadFaculty()">Upload Faculty Preferences</button>
+        </form>
+        
+        <br> <!-- Added space between forms and allocate button -->
+        
+        <button type="button" onclick="allocate()">Allocate</button>
+        
+        <br><br>
+        
+        <a id="download-allocations" href="#" style="display:none;">Download Allocations</a>
+        <a id="download-unallocated" href="#" style="display:none;">Download Unallocated Students</a>
+    </div>
+
+    <script>
+        function uploadStudent() {
+            var formData = new FormData(document.getElementById('upload-student-form'));
+            fetch('/upload_student', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => alert(data));
+        }
+
+        function uploadFaculty() {
+            var formData = new FormData(document.getElementById('upload-faculty-form'));
+            fetch('/upload_faculty', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => alert(data));
+        }
+
+        function allocate() {
+            fetch('/allocate', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('download-allocations').href = '/download/' + data.allocations;
+                document.getElementById('download-allocations').style.display = 'block';
+                document.getElementById('download-unallocated').href = '/download/' + data.unallocated;
+                document.getElementById('download-unallocated').style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>
